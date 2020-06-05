@@ -3,6 +3,7 @@ Contains path-names, environment variables for the project
 """
 
 import os
+import numpy as np
 
 # Path to original data files
 ORIG_INPUT_DIR = "../data/raw/home_images"
@@ -15,7 +16,13 @@ VAL_PATH = os.path.sep.join([BASE_PATH, "validation"])
 TEST_PATH = os.path.sep.join([BASE_PATH, "test"])
 
 # PATH to save model
-MODEL_PATH = '../visual_home_finder/model'
+MODEL_PATH = '../visual_home_finder'
+
+# PATH to house listings
+LISTINGS_PATH = '../data/raw/house_listings'
+
+# PATH to save home features
+FEATURE_PATH = os.path.sep.join([BASE_PATH, "home_features"])
 
 # define the amount of data that will be used training
 TRAIN_SPLIT = 0.8
@@ -24,7 +31,12 @@ TRAIN_SPLIT = 0.8
 VAL_SPLIT = 0.1
 
 # define the names of the classes
-CLASSES = ["capecod", "colonial", 'craftsman', 'modern', 'ranch', 'tudor', 'victorian']
+#CLASSES = ["cape_cod", "colonial", 'craftsman', 'modern', 'ranch', 'tudor', 'victorian']
+CLASSES = ['craftsman', 'modern', 'ranch', 'tudor', 'victorian']
 
+# Name of model
+MODEL_NAME = 'eighth_model_50epochs_5classes.h5'
 
-
+# Mean and STD of all the training images
+IMG_MEAN = np.array([123.526794, 129.04448, 119.95359], dtype=np.float32).reshape((1, 1, 3))
+IMG_STD = 62  # np.array([62.082836, 61.87381, 73.08175], dtype=np.float32).reshape((1,1,3))
