@@ -13,6 +13,7 @@ import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import cosine_similarity, euclidean_distances
 from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import Model, load_model
+from PIL import Image
 
 @st.cache
 def read_listings():
@@ -53,7 +54,8 @@ def get_features_for_image(image_file_name, home_feature_model):
     :param home_feature_model: Keras model to generate feature embeddings
     :return: feature embeddings for the image
     """
-    image_pil = image.load_img(image_file_name, target_size = (224,224))
+    image_pil = Image.open(image_file_name)
+    image_pil = image_pil.resize((224, 224))
     image_array = image.img_to_array(image_pil)
     image_array = np.expand_dims(image_array - config.IMG_MEAN, axis=0)  # Shape = (1,222,224,3)
     image_feature = np.ravel(home_feature_model.predict(image_array)).tolist()
