@@ -40,3 +40,11 @@ MODEL_NAME = 'eighth_model_50epochs_5classes.h5'
 # Mean and STD of all the training images
 IMG_MEAN = np.array([123.526794, 129.04448, 119.95359], dtype=np.float32).reshape((1, 1, 3))
 IMG_STD = 62  # np.array([62.082836, 61.87381, 73.08175], dtype=np.float32).reshape((1,1,3))
+
+# Name of CSV file with house-listing embeddings
+FEATURE_FILE = os.path.sep.join([FEATURE_PATH, "home_features4.csv"])
+
+# Some default values for the web-app
+
+# Default value for the home similarity index: controls the number of listings shown on the page
+SIMILARITY_DEFAULT = 0.75
