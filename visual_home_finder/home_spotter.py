@@ -15,6 +15,7 @@ from tensorflow.keras.preprocessing import image
 from tensorflow.keras.models import Model, load_model
 from PIL import Image
 
+
 @st.cache
 def read_listings():
     """
@@ -50,7 +51,7 @@ def read_model():
 def get_features_for_image(image_file_name, home_feature_model):
     """
     Returns the feature embeddings for an image using the home_feature_model
-    :param image_file_name: Image file (in .jpg or other file formats)
+    :param image_file_name: Image file (in .jpg or other file formats). Can also be IObytes (directly from web)
     :param home_feature_model: Keras model to generate feature embeddings
     :return: feature embeddings for the image
     """
@@ -89,23 +90,24 @@ def get_home_stats(listings_df):
     home_stats['Max Price'] = listings_df['PRICE'].max()
     return home_stats
 
+
 def main():
 
-    go_to_homepage = st.sidebar.button("Go to Home-page")
     similarity_value = st.sidebar.slider('Home Similarity Threshold', 0.0, 1.0, config.SIMILARITY_DEFAULT)
 
     st.title('HomeSpotter')
+    st.subheader('Curating Home-listings by Visual Style')
+    st.text('\n')
+    st.text('\n')
 
     # Load up the model and listings information at the beginning itself
     home_model = read_model()
     home_listings_df = read_listings()
 
     # User uploads picture
-    uploaded_file = st.file_uploader("Upload Home Image...", type="jpg")
+    uploaded_file = st.file_uploader("Upload Picture of Dream Home", type="jpg")
 
     if uploaded_file is not None:
-
-        #home_image = image.load_img(uploaded_file)
 
         # Get feature embedding for uploaded home with other listings
         home_similarities = get_similarities_with_other_listings(uploaded_file,
@@ -122,6 +124,7 @@ def main():
         home_stats = get_home_stats(home_listings_df.iloc[filtered_indices, :])
         plt.figure()
         plt.hist(home_listings_df.iloc[filtered_indices, :].loc[:, 'PRICE'].values, 20)
+        plt.title('Price Range of Similar Homes')
         plt.xlabel('Home Prices')
         plt.ylabel('Number of Houses')
         plt.savefig('temp_fig.jpg')
@@ -146,13 +149,11 @@ def main():
         for iv, ii in enumerate(filtered_indices):
 
             # Remove the same house listing
-            if abs(home_similarities_filtered[iv] - 1.0) <= 1e-10:
+            if abs(home_similarities_filtered[iv] - 1.0) <= 1e-5:
                 continue
             similar_home_index = home_listings_df.index[ii]
             type(similar_home_index)
             similar_home_file = os.path.sep.join([config.LISTINGS_PATH, similar_home_index+'.jpg'])
-            #similar_home_img = image.load_img(similar_home_file, target_size=(224,224))
-            #st.image(similar_home_img)
 
             with str_util.Grid("1 1 1 1", color=str_util.COLOR, background_color=str_util.BACKGROUND_COLOR) as grid:
                 grid.cell(
@@ -163,6 +164,7 @@ def main():
                     grid_row_end=2,
                 ).image_from_file(similar_home_file)
                 grid.cell("b", 2, 4, 1, 2).print_home_details(home_listings_df.iloc[ii, :])
+
 
 if __name__ == "__main__":
     main()
