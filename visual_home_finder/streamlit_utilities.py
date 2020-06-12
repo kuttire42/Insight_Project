@@ -73,16 +73,18 @@ class Cell:
                      home_stats['Max Price'])
         self.inner_html = markdown.markdown(print_str)
 
-    def print_home_details(self, home_details_df):
+    def print_home_details(self, home_details_df, similarity):
         """
         Prints details for a particular home
         :param home_details_df: Dataframe with 1 row containing details of a particular home
+        :param similarity: Similarity score
         :return: html for the text to be printed
         """
         print_str = 'Price: ${:,}    \n'.format(home_details_df['PRICE'])
         print_str += 'Number of Beds: %s    \n'%(home_details_df['BEDS'])
         print_str += 'Number of Baths: %s    \n'%(home_details_df['BATHS'])
         print_str += 'URL: <%s>    \n'%(home_details_df['url'])
+        print_str += 'Similarity Score is: %.3f    \n' % similarity
         self.inner_html = markdown.markdown(print_str)
 
     def markdown(self, text):

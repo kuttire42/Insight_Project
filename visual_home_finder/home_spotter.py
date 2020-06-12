@@ -149,7 +149,7 @@ def main():
         for iv, ii in enumerate(filtered_indices):
 
             # Remove the same house listing
-            if abs(home_similarities_filtered[iv] - 1.0) <= 1e-5:
+            if abs(home_similarities_filtered[iv] - 1.0) <= 1e-10:
                 continue
             similar_home_index = home_listings_df.index[ii]
             type(similar_home_index)
@@ -163,7 +163,7 @@ def main():
                     grid_row_start=1,
                     grid_row_end=2,
                 ).image_from_file(similar_home_file)
-                grid.cell("b", 2, 4, 1, 2).print_home_details(home_listings_df.iloc[ii, :])
+                grid.cell("b", 2, 4, 1, 2).print_home_details(home_listings_df.iloc[ii, :], home_similarities_filtered[iv])
 
 
 if __name__ == "__main__":
