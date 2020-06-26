@@ -71,6 +71,25 @@ def get_features_for_image(image_file_name, feature_model):
     return image_feature
 
 
+def get_features_for_image_with_scaling(image_file_name, feature_model):
+    """
+    Returns the feature embeddings for an image using the home_feature_model. Instead of subtracting mean,
+    this scales the image values so that its between 0 and 1
+    :param image_file_name: Image file (in .jpg or other file formats). Can also be IObytes (directly from web)
+    :param feature_model: Keras model to generate feature embeddings
+    :return: feature embeddings for the image
+    """
+
+    image_pil = Image.open(image_file_name)  # We are using PIL since keras image does not support IOBytes Tensorflow
+    #  2.2 onwards
+    image_pil = image_pil.resize((config.IMAGE_SIZE, config.IMAGE_SIZE))
+    image_array = image.img_to_array(image_pil)[..., :3]  # Some image types such as png have 4 channels (additional
+    # transparency channel. Remove fourth and only keep first 3 RGB channels
+    image_array = np.expand_dims(image_array/256, axis=0)  # Shape = (1,222,224,3)
+    image_feature = np.ravel(feature_model.predict(image_array)).tolist()
+    return image_feature
+
+
 def str_to_array(string_numpy):
     """formatting : Conversion of String List to List
 
